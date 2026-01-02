@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Heart, Scale, Calendar, Gauge, Fuel, Cog, Car, Settings, Share2 } from "lucide-react";
+import { ArrowLeft, Heart, Scale, Calendar, Gauge, Fuel, Cog, Car, Settings, Share2, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { cars, formatPrice, formatMileage } from "@/data/cars";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useCompare } from "@/contexts/CompareContext";
@@ -10,6 +11,7 @@ import { ContactButtons } from "@/components/ContactButtons";
 import { CarCard } from "@/components/CarCard";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/AnimatedSection";
 
 const CarDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,10 +23,10 @@ const CarDetailPage = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="container-custom py-16 text-center">
-          <h1 className="font-heading text-2xl font-bold mb-4">Машин олдсонгүй</h1>
+        <main className="container-wide py-32 text-center">
+          <h1 className="text-headline mb-6">Машин олдсонгүй</h1>
           <Link to="/cars">
-            <Button>Машинууд руу буцах</Button>
+            <Button className="uppercase tracking-wider">Машинууд руу буцах</Button>
           </Link>
         </main>
         <Footer />
@@ -75,7 +77,6 @@ const CarDetailPage = () => {
     { icon: Car, label: "Түлшний зарцуулалт", value: car.fuelConsumption },
   ];
 
-  // Related cars (same brand, excluding current)
   const relatedCars = cars
     .filter((c) => c.brand === car.brand && c.id !== car.id)
     .slice(0, 3);
@@ -84,117 +85,153 @@ const CarDetailPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="container-custom py-8">
+      <main className="pt-28 pb-24">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/" className="hover:text-foreground transition-colors">Нүүр</Link>
-          <span>/</span>
-          <Link to="/cars" className="hover:text-foreground transition-colors">Машинууд</Link>
-          <span>/</span>
-          <span className="text-foreground">{car.name}</span>
-        </nav>
+        <div className="container-wide mb-8">
+          <motion.nav
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3 text-sm text-muted-foreground"
+          >
+            <Link to="/" className="hover:text-foreground transition-colors">Нүүр</Link>
+            <span>/</span>
+            <Link to="/cars" className="hover:text-foreground transition-colors">Машинууд</Link>
+            <span>/</span>
+            <span className="text-foreground">{car.name}</span>
+          </motion.nav>
+        </div>
 
-        {/* Back Button (Mobile) */}
-        <Link to="/cars" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 md:hidden">
-          <ArrowLeft className="h-4 w-4" />
-          Буцах
-        </Link>
+        <div className="container-wide">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            {/* Image Gallery */}
+            <AnimatedSection>
+              <ImageGallery images={car.images} carName={car.name} />
+            </AnimatedSection>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Image Gallery */}
-          <div>
-            <ImageGallery images={car.images} carName={car.name} />
-          </div>
-
-          {/* Car Details */}
-          <div className="space-y-6">
-            {/* Header */}
-            <div>
-              <div className="flex items-start justify-between gap-4 mb-2">
-                <div>
-                  <h1 className="font-heading text-2xl md:text-3xl font-bold">{car.name}</h1>
-                  <p className="text-muted-foreground">{car.brand} • {car.model}</p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={handleFavoriteClick}
-                    className={favorite ? "border-primary text-primary" : ""}
-                  >
-                    <Heart className={`h-5 w-5 ${favorite ? "fill-current" : ""}`} />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={handleCompareClick}
-                    className={inCompare ? "border-primary text-primary" : ""}
-                  >
-                    <Scale className="h-5 w-5" />
-                  </Button>
-                  <Button variant="outline" size="icon" onClick={handleShare}>
-                    <Share2 className="h-5 w-5" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Badges */}
-              <div className="flex gap-2 mt-3">
-                {car.engineType === "Hybrid" && (
-                  <span className="badge-hybrid">Hybrid</span>
-                )}
-                {car.featured && (
-                  <span className="bg-primary text-primary-foreground px-2.5 py-1 rounded-full text-xs font-medium">
-                    Онцлох
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Price */}
-            <div className="bg-card rounded-xl p-6 border border-border">
-              <span className="text-muted-foreground text-sm block mb-1">Үнэ</span>
-              <span className="font-heading text-3xl md:text-4xl font-bold text-primary">
-                {formatPrice(car.price)}
-              </span>
-            </div>
-
-            {/* Specs Grid */}
-            <div className="bg-card rounded-xl p-6 border border-border">
-              <h3 className="font-heading font-semibold text-lg mb-4">Техникийн үзүүлэлт</h3>
-              <div className="grid grid-cols-2 gap-4">
-                {specs.map((spec) => (
-                  <div key={spec.label} className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-                      <spec.icon className="h-5 w-5 text-muted-foreground" />
+            {/* Car Details */}
+            <div className="space-y-8">
+              {/* Header */}
+              <AnimatedSection delay={0.1}>
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div>
+                    <div className="flex gap-2 mb-4">
+                      {car.engineType === "Hybrid" && (
+                        <span className="badge-hybrid">Hybrid</span>
+                      )}
+                      {car.featured && (
+                        <span className="bg-foreground text-background px-3 py-1 text-xs font-medium uppercase tracking-wider">
+                          Онцлох
+                        </span>
+                      )}
                     </div>
-                    <div>
-                      <span className="text-muted-foreground text-sm block">{spec.label}</span>
-                      <span className="font-medium">{spec.value}</span>
-                    </div>
+                    <h1 className="text-headline mb-2">{car.name}</h1>
+                    <p className="text-muted-foreground text-lg">{car.brand} • {car.model}</p>
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              </AnimatedSection>
 
-            {/* Description */}
-            <div className="bg-card rounded-xl p-6 border border-border">
-              <h3 className="font-heading font-semibold text-lg mb-3">Тайлбар</h3>
-              <p className="text-muted-foreground leading-relaxed">{car.description}</p>
-            </div>
+              {/* Price */}
+              <AnimatedSection delay={0.2}>
+                <div className="border-y border-border py-6">
+                  <span className="text-sm uppercase tracking-[0.2em] text-muted-foreground block mb-2">Үнэ</span>
+                  <span className="font-heading text-4xl md:text-5xl font-light">
+                    {formatPrice(car.price)}
+                  </span>
+                </div>
+              </AnimatedSection>
 
-            {/* Contact Buttons */}
-            <ContactButtons carName={car.name} />
+              {/* Actions */}
+              <AnimatedSection delay={0.3}>
+                <div className="flex gap-3">
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
+                    <Button
+                      variant={favorite ? "default" : "outline"}
+                      size="lg"
+                      onClick={handleFavoriteClick}
+                      className="w-full gap-2 uppercase tracking-wider rounded-none"
+                    >
+                      <Heart className={`h-4 w-4 ${favorite ? "fill-current" : ""}`} />
+                      Хадгалах
+                    </Button>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
+                    <Button
+                      variant={inCompare ? "default" : "outline"}
+                      size="lg"
+                      onClick={handleCompareClick}
+                      className="w-full gap-2 uppercase tracking-wider rounded-none"
+                    >
+                      <Scale className="h-4 w-4" />
+                      Харьцуулах
+                    </Button>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button variant="outline" size="lg" onClick={handleShare} className="rounded-none">
+                      <Share2 className="h-4 w-4" />
+                    </Button>
+                  </motion.div>
+                </div>
+              </AnimatedSection>
+
+              {/* Specs Grid */}
+              <AnimatedSection delay={0.4}>
+                <div className="border border-border p-6">
+                  <h3 className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-6">Техникийн үзүүлэлт</h3>
+                  <StaggerContainer className="grid grid-cols-2 gap-6" staggerDelay={0.05}>
+                    {specs.map((spec) => (
+                      <StaggerItem key={spec.label}>
+                        <div className="flex items-start gap-4">
+                          <div className="w-10 h-10 border border-border flex items-center justify-center flex-shrink-0">
+                            <spec.icon className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground text-sm block mb-1">{spec.label}</span>
+                            <span className="font-medium">{spec.value}</span>
+                          </div>
+                        </div>
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
+                </div>
+              </AnimatedSection>
+
+              {/* Description */}
+              <AnimatedSection delay={0.5}>
+                <div className="border border-border p-6">
+                  <h3 className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">Тайлбар</h3>
+                  <p className="text-muted-foreground leading-relaxed">{car.description}</p>
+                </div>
+              </AnimatedSection>
+
+              {/* Contact Buttons */}
+              <AnimatedSection delay={0.6}>
+                <ContactButtons carName={car.name} />
+              </AnimatedSection>
+            </div>
           </div>
         </div>
 
         {/* Related Cars */}
         {relatedCars.length > 0 && (
-          <section className="mt-16">
-            <h2 className="font-heading text-2xl font-bold mb-6">Холбоотой машинууд</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedCars.map((relatedCar) => (
-                <CarCard key={relatedCar.id} car={relatedCar} />
+          <section className="container-wide mt-24">
+            <AnimatedSection className="flex items-end justify-between mb-12">
+              <div>
+                <span className="text-sm uppercase tracking-[0.2em] text-muted-foreground block mb-4">
+                  Холбоотой
+                </span>
+                <h2 className="text-headline">Ижил төстэй машинууд</h2>
+              </div>
+              <Link
+                to="/cars"
+                className="group flex items-center gap-2 text-sm uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity"
+              >
+                Бүгдийг үзэх
+                <ArrowUpRight className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              </Link>
+            </AnimatedSection>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {relatedCars.map((relatedCar, index) => (
+                <CarCard key={relatedCar.id} car={relatedCar} index={index} />
               ))}
             </div>
           </section>
