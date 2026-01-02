@@ -106,11 +106,14 @@ const CarsPage = () => {
                 />
               </div>
               <div className="flex gap-4">
-                <CarFilters
-                  filters={filters}
-                  onFilterChange={setFilters}
-                  onReset={handleResetFilters}
-                />
+                {/* Mobile Filter Button - Only visible on small screens */}
+                <div className="xl:hidden">
+                  <CarFilters
+                    filters={filters}
+                    onFilterChange={setFilters}
+                    onReset={handleResetFilters}
+                  />
+                </div>
                 <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
                   <SelectTrigger className="w-[200px] h-12 rounded-none border-border">
                     <SelectValue placeholder="Эрэмбэлэх" />
