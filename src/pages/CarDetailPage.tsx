@@ -87,7 +87,7 @@ const CarDetailPage = () => {
 
       <main className="pt-28 pb-24">
         {/* Breadcrumb */}
-        <div className="container-wide mb-8">
+        <div className="container-wide mb-6">
           <motion.nav
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
