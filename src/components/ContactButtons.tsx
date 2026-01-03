@@ -8,7 +8,7 @@ interface ContactButtonsProps {
 }
 
 export function ContactButtons({ carName, className = "" }: ContactButtonsProps) {
-  const phoneNumber = "+97699999999";
+  const phoneNumber = "+97699889966";
   const whatsappMessage = carName 
     ? `Сайн байна у|у! ${carName} машины талаар мэдээлэл авмаар байна.`
     : "Сайн байна уу! Машины талаар мэдээлэл авмаар байна.";

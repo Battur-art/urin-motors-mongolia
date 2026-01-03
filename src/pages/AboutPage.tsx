@@ -65,8 +65,8 @@ const AboutPage = () => {
                     </div>
                     <div>
                       <span className="text-muted-foreground text-sm block">Утас</span>
-                      <a href="tel:+97699999999" className="font-medium hover:text-primary transition-colors">
-                        +976 9999 9999
+                      <a href="tel:+97699889966" className="font-medium hover:text-primary transition-colors">
+                        +976 99 88 99 66
                       </a>
                     </div>
                   </li>

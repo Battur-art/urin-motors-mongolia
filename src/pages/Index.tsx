@@ -106,7 +106,7 @@ const Index = () => {
                       </Button>
                     </motion.div>
                   </Link>
-                  <a href="tel:+97699999999">
+                  <a href="tel:+97699889966">
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                       <Button size="lg" variant="outline" className="uppercase tracking-wider px-8">
                         Холбоо барих
@@ -206,7 +206,7 @@ const Index = () => {
               </AnimatedSection>
 
               <AnimatedSection delay={0.3} className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="https://wa.me/97699999999" target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/97699889966" target="_blank" rel="noopener noreferrer">
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button
                       size="lg"
@@ -216,14 +216,14 @@ const Index = () => {
                     </Button>
                   </motion.div>
                 </a>
-                <a href="tel:+97699999999">
+                <a href="tel:+97699889966">
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button
                       size="lg"
                       variant="outline"
-                      className="border-background/30 text-background hover:bg-background/10 uppercase tracking-wider px-8"
+                     className="border border-white bg-black text-white hover:bg-white hover:text-black hover:border-black uppercase tracking-wider px-8 py-3 transition-all duration-300"
                     >
-                      +976 9999 9999
+                      +976 99 88 99 66
                     </Button>
                   </motion.div>
                 </a>

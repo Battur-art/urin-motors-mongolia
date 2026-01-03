@@ -1,11 +1,16 @@
+import lexusRxExterior1 from "@/assets/cars/lexus-rx-exterior-2.jpg";
+import lexusRxExterior2 from "@/assets/cars/lexus-rx-exterior-1.jpg";
+import lexusRxExterior3 from "@/assets/cars/lexus-rx-exterior-3.jpg";
+import lexusRxInterior1 from "@/assets/cars/lexus-rx-interior-1.jpg";
+import lexusRxInterior2 from "@/assets/cars/lexus-rx-interior-2.jpg";
 import prius41Exterior from "@/assets/cars/prius-41-exterior-1.jpg";
 import prius41Interior from "@/assets/cars/prius-41-interior-1.jpg";
 import prius41Engine from "@/assets/cars/prius-41-engine-1.jpg";
-import lexusRxExterior from "@/assets/cars/lexus-rx-exterior-1.jpg";
-import harrierExterior from "@/assets/cars/harrier-exterior-1.jpg";
-import camryExterior from "@/assets/cars/camry-exterior-1.jpg";
+import harrierExterior from "@/assets/cars/harrier-exterior-1.jpg"; 
 import crownExterior from "@/assets/cars/crown-exterior-1.jpg";
 import saiExterior from "@/assets/cars/sai-exterior-1.jpg";
+import prius55Exterior from "@/assets/cars/prius-55-exterior-1.jpg";
+import prius40Exterior from "@/assets/cars/prius-40-exterior-1.jpg";
 
 export interface CarImage {
   url: string;
@@ -19,7 +24,7 @@ export interface Car {
   model: string;
   year: number;
   mileage: number;
-  engineType: "Hybrid" | "Gasoline";
+  engineType: "Hybrid" | "Gasoline" | "Gasoline 2.5 turbo";
   driveType: "AWD" | "FWD";
   transmission: string;
   fuelConsumption: string;
@@ -56,26 +61,26 @@ export const cars: Car[] = [
     featured: true,
   },
   {
-    id: "lexus-rx-450h-2020",
-    name: "Lexus RX 450h",
+    id: "lexus-rx-200t-2020",
+    name: "Lexus RX 200t sport",
     brand: "Lexus",
-    model: "RX 450h",
+    model: "RX 200t",
     year: 2020,
-    mileage: 32000,
-    engineType: "Hybrid",
+    mileage: 70000,
+    engineType: "Gasoline 2.5 turbo",
     driveType: "AWD",
-    transmission: "CVT автомат",
+    transmission: "8 шатлалт автомат",
     fuelConsumption: "5.8л / 100км",
     price: 98000000,
-    description: "Дээд зэрэглэлийн Lexus RX 450h. AWD хөтлөгчтэй, Монголын уур амьсгалд тохиромжтой. Бүрэн арьсан салон, Mark Levinson аудио систем, 360 камер.",
+    description: "Дээд зэрэглэлийн Lexus RX 200t. AWD хөтлөгчтэй, Монголын уур амьсгалд тохиромжтой. Бүрэн арьсан салон, Mark Levinson аудио систем, 360 камер.",
     images: [
-      { url: lexusRxExterior, category: "exterior" },
-      { url: lexusRxExterior, category: "exterior" },
-      { url: lexusRxExterior, category: "exterior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Engine, category: "engine" },
-      { url: prius41Engine, category: "engine" },
+      { url: lexusRxExterior1, category: "exterior" },
+      { url: lexusRxExterior2, category: "exterior" },
+      { url: lexusRxExterior3, category: "exterior" },
+      { url: lexusRxInterior1, category: "interior" },
+      { url: lexusRxInterior2, category: "interior" },
+
+     
     ],
     featured: true,
   },
@@ -102,27 +107,7 @@ export const cars: Car[] = [
     ],
     featured: true,
   },
-  {
-    id: "toyota-camry-2020",
-    name: "Toyota Camry",
-    brand: "Toyota",
-    model: "Camry",
-    year: 2020,
-    mileage: 52000,
-    engineType: "Hybrid",
-    driveType: "FWD",
-    transmission: "CVT автомат",
-    fuelConsumption: "4.2л / 100км",
-    price: 55000000,
-    description: "Toyota Camry Hybrid. Бизнес зэрэглэлийн седан, тав тухтай суудал, JBL аудио систем. Япон улсаас татсан, бүх баримт бичиг бэлэн.",
-    images: [
-      { url: camryExterior, category: "exterior" },
-      { url: camryExterior, category: "exterior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Engine, category: "engine" },
-    ],
-  },
+ 
   {
     id: "toyota-crown-2019",
     name: "Toyota Crown",
@@ -131,7 +116,7 @@ export const cars: Car[] = [
     year: 2019,
     mileage: 48000,
     engineType: "Hybrid",
-    driveType: "FWD",
+    driveType: "AWD",
     transmission: "8 шатлалт автомат",
     fuelConsumption: "5.0л / 100км",
     price: 65000000,
@@ -183,24 +168,52 @@ export const cars: Car[] = [
       { url: prius41Engine, category: "engine" },
     ],
   },
+  
   {
-    id: "toyota-prius-40-2018",
-    name: "Toyota Prius 40",
+    id: "toyota-prius-55-2018",
+    name: "Toyota Prius 55",
     brand: "Toyota",
-    model: "Prius 40",
+    model: "Prius 55",
     year: 2018,
-    mileage: 55000,
+    mileage: 65000,
     engineType: "Hybrid",
     driveType: "FWD",
     transmission: "CVT автомат",
-    fuelConsumption: "3.6л / 100км",
-    price: 38000000,
-    description: "Toyota Prius Alpha (40 series). 7 суудалтай өргөтгөсөн загвар. Гэр бүлд тохиромжтой, өргөн ачааны хэсэг.",
+    fuelConsumption: "4.2л / 100км",
+    price: 42000000,
+    description: "Toyota Prius 55 Hybrid. Найдвартай хайбрид систем, засвар үйлчилгээ хялбар. Анхны эзэмшигчээс.",
     images: [
-      { url: prius41Exterior, category: "exterior" },
+      { url: prius55Exterior, category: "exterior" },
+      { url: prius55Exterior, category: "exterior" },
+      { url: prius55Exterior, category: "interior" },
+      { url: prius55Exterior, category: "interior" },
+      { url: prius55Exterior, category: "engine" },
+    ],
+  },
+  {
+    id: "toyota-prius-40-2015",
+    name: "Toyota Prius 40",
+    brand: "Toyota",
+    model: "Prius 40",
+    year: 2015,
+    mileage: 45000,
+    engineType: "Hybrid",
+    driveType: "FWD",
+    transmission: "CVT автомат",
+    fuelConsumption: "3.5л / 100км",
+    price: 42000000,
+    description: "Япон улсаас шууд татан авсан, маш сайн нөхцөлтэй Toyota Prius 40. Хайбрид технологи нь түлш хэмнэлттэй, байгаль орчинд ээлтэй. Бүх оношилгоо хийгдсэн, хуудас бичиг баримт бүрдүүлсэн.",
+    images: [
+      { url: prius40Exterior, category: "exterior" },
+      { url: prius40Exterior, category: "exterior" },
+      { url: prius40Exterior, category: "exterior" },
+      { url: prius41Interior, category: "interior" },
+      { url: prius41Interior, category: "interior" },
       { url: prius41Interior, category: "interior" },
       { url: prius41Engine, category: "engine" },
+      { url: prius41Engine, category: "engine" },
     ],
+    featured: true,
   },
 ];
 

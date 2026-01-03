@@ -124,7 +124,7 @@ export function Header() {
               </motion.div>
             </Link>
 
-            <a href="tel:+97699999999" className="hidden md:block ml-4">
+            <a href="tel:+97699889966" className="hidden md:block ml-4">
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button className="uppercase tracking-wider text-xs px-6">
                   Холбоо барих
@@ -181,9 +181,9 @@ export function Header() {
                 transition={{ delay: navLinks.length * 0.1 }}
                 className="pt-4 mt-4 border-t border-border"
               >
-                <a href="tel:+97699999999">
+                <a href="tel:+97699889966">
                   <Button className="w-full uppercase tracking-wider">
-                    +976 9999 9999
+                    +976 99 88 99 66
                   </Button>
                 </a>
               </motion.div>

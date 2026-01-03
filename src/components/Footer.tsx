@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import Logo from "@/assets/urin.jpg";
 
 export function Footer() {
   return (
@@ -9,9 +10,7 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-heading font-bold text-xl">U</span>
-              </div>
+              <img src={Logo} alt="Urin Motors" className="w-10 h-10" />
               <span className="font-heading font-bold text-xl">Urin Motors</span>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
@@ -69,13 +68,13 @@ export function Footer() {
             <h4 className="font-heading font-semibold mb-4">Холбоо барих</h4>
             <ul className="space-y-3">
               <li>
-                <a href="tel:+97699999999" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
+                <a href="tel:+97699889966" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
                   <Phone className="h-4 w-4" />
-                  +976 9999 9999
+                  +976 99 88 99 66
                 </a>
               </li>
               <li>
-                <a href="https://wa.me/97699999999" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
+                <a href="https://wa.me/97699889966" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
                   <MessageCircle className="h-4 w-4" />
                   WhatsApp
                 </a>
