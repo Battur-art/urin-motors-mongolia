@@ -39,8 +39,8 @@ const CarsPage = () => {
       if (car.year < filters.yearMin || car.year > filters.yearMax) return false;
       if (car.price < filters.priceMin || car.price > filters.priceMax) return false;
       if (car.mileage < filters.mileageMin || car.mileage > filters.mileageMax) return false;
-      if (filters.engineType && filters.engineType !== "all" && car.engineType !== filters.engineType) return false;
-      if (filters.driveType && filters.driveType !== "all" && car.driveType !== filters.driveType) return false;
+      if (filters.engineType && filters.engineType !== "all" && car.engineType.trim() !== filters.engineType.trim()) return false;
+      if (filters.driveType && filters.driveType !== "all" && car.driveType.trim() !== filters.driveType.trim()) return false;
 
       return true;
     });

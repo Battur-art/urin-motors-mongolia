@@ -38,16 +38,16 @@ interface CarFiltersProps {
 }
 
 export const defaultFilters: FilterState = {
-  brand: "",
-  model: "",
+  brand: "all",
+  model: "all",
   yearMin: 2015,
   yearMax: 2025,
   priceMin: 0,
   priceMax: 150000000,
   mileageMin: 0,
-  mileageMax: 200000,
-  engineType: "",
-  driveType: "",
+  mileageMax: 300000,
+  engineType: "all",
+  driveType: "all",
 };
 
 function formatNumber(num: number): string {
@@ -156,7 +156,7 @@ function FiltersContent({ filters, onFilterChange, onReset }: CarFiltersProps) {
         <div className="px-1">
           <Slider
             min={0}
-            max={200000}
+            max={300000}
             step={10000}
             value={[filters.mileageMin, filters.mileageMax]}
             onValueChange={([min, max]) =>
@@ -181,7 +181,7 @@ function FiltersContent({ filters, onFilterChange, onReset }: CarFiltersProps) {
             <SelectItem value="all">Бүгд</SelectItem>
             {engineTypes.map((type) => (
               <SelectItem key={type} value={type}>
-                {type === "Hybrid" ? "Хайбрид" : "Бензин"}
+                {type === "Hybrid" ? "Хайбрид" : type === "Gasoline 2.5 turbo" ? "Бензин 2.5 турбо" : "Бензин"}
               </SelectItem>
             ))}
           </SelectContent>

@@ -4,17 +4,21 @@ import lexusRxExterior3 from "@/assets/cars/lexus-rx-exterior-3.jpg";
 import lexusRxInterior1 from "@/assets/cars/lexus-rx-interior-1.jpg";
 import lexusRxInterior2 from "@/assets/cars/lexus-rx-interior-2.jpg";
 import prius41Exterior from "@/assets/cars/prius-41-exterior-1.jpg";
-import prius41Interior from "@/assets/cars/prius-41-interior-1.jpg";
-import prius41Engine from "@/assets/cars/prius-41-engine-1.jpg";
 import harrierExterior from "@/assets/cars/harrier-exterior-1.jpg"; 
 import crownExterior from "@/assets/cars/crown-exterior-1.jpg";
+import crownExterior2 from "@/assets/cars/crown-exterior-2.jpg";
+import crownExterior3 from "@/assets/cars/crown-exterior-3.jpg";
+import crownInterior1 from "@/assets/cars/crown-interior-1.jpg";
+import crownInterior2 from "@/assets/cars/crown-interior-2.jpg";
 import saiExterior from "@/assets/cars/sai-exterior-1.jpg";
 import prius55Exterior from "@/assets/cars/prius-55-exterior-1.jpg";
 import prius40Exterior from "@/assets/cars/prius-40-exterior-1.jpg";
+import prius30Exterior from "@/assets/cars/prius-30-exterior-1.png";
+import prius30Exterior2 from "@/assets/cars/prius-30-exterior-2.png";
 
 export interface CarImage {
   url: string;
-  category: "exterior" | "interior" | "engine";
+  category: "exterior" | "engine" | "interior";
 }
 
 export interface Car {
@@ -51,12 +55,6 @@ export const cars: Car[] = [
     images: [
       { url: prius41Exterior, category: "exterior" },
       { url: prius41Exterior, category: "exterior" },
-      { url: prius41Exterior, category: "exterior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Engine, category: "engine" },
-      { url: prius41Engine, category: "engine" },
     ],
     featured: true,
   },
@@ -70,7 +68,7 @@ export const cars: Car[] = [
     engineType: "Gasoline 2.5 turbo",
     driveType: "AWD",
     transmission: "8 шатлалт автомат",
-    fuelConsumption: "5.8л / 100км",
+    fuelConsumption: "12л / 100км",
     price: 98000000,
     description: "Дээд зэрэглэлийн Lexus RX 200t. AWD хөтлөгчтэй, Монголын уур амьсгалд тохиромжтой. Бүрэн арьсан салон, Mark Levinson аудио систем, 360 камер.",
     images: [
@@ -79,8 +77,6 @@ export const cars: Car[] = [
       { url: lexusRxExterior3, category: "exterior" },
       { url: lexusRxInterior1, category: "interior" },
       { url: lexusRxInterior2, category: "interior" },
-
-     
     ],
     featured: true,
   },
@@ -101,32 +97,29 @@ export const cars: Car[] = [
       { url: harrierExterior, category: "exterior" },
       { url: harrierExterior, category: "exterior" },
       { url: harrierExterior, category: "exterior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Engine, category: "engine" },
     ],
     featured: true,
   },
  
   {
-    id: "toyota-crown-2019",
+    id: "toyota-crown-2023",
     name: "Toyota Crown",
     brand: "Toyota",
     model: "Crown",
-    year: 2019,
-    mileage: 48000,
+    year: 2023,
+    mileage: 23000,
     engineType: "Hybrid",
     driveType: "AWD",
-    transmission: "8 шатлалт автомат",
-    fuelConsumption: "5.0л / 100км",
-    price: 65000000,
+    transmission: "6 шатлалт автомат",
+    fuelConsumption: "12л / 100км",
+    price: 120000000,
     description: "Toyota Crown - Японы дотоод зах зээлийн шилдэг седан. Дээд зэрэглэлийн тоноглол, арьсан салон, adaptive suspension.",
     images: [
       { url: crownExterior, category: "exterior" },
-      { url: crownExterior, category: "exterior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Engine, category: "engine" },
+      { url: crownExterior2, category: "exterior" },
+      { url: crownExterior3, category: "exterior" },
+      { url: crownInterior1, category: "interior" },
+      { url: crownInterior2, category: "interior" },
     ],
   },
   {
@@ -145,8 +138,6 @@ export const cars: Car[] = [
     images: [
       { url: saiExterior, category: "exterior" },
       { url: saiExterior, category: "exterior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Engine, category: "engine" },
     ],
   },
   {
@@ -163,9 +154,8 @@ export const cars: Car[] = [
     price: 28000000,
     description: "Алдартай Toyota Prius 30. Найдвартай хайбрид систем, засвар үйлчилгээ хялбар. Анхны эзэмшигчээс.",
     images: [
-      { url: prius41Exterior, category: "exterior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Engine, category: "engine" },
+      { url: prius30Exterior, category: "exterior" },
+      { url: prius30Exterior2, category: "exterior" },
     ],
   },
   
@@ -185,9 +175,6 @@ export const cars: Car[] = [
     images: [
       { url: prius55Exterior, category: "exterior" },
       { url: prius55Exterior, category: "exterior" },
-      { url: prius55Exterior, category: "interior" },
-      { url: prius55Exterior, category: "interior" },
-      { url: prius55Exterior, category: "engine" },
     ],
   },
   {
@@ -206,20 +193,14 @@ export const cars: Car[] = [
     images: [
       { url: prius40Exterior, category: "exterior" },
       { url: prius40Exterior, category: "exterior" },
-      { url: prius40Exterior, category: "exterior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Interior, category: "interior" },
-      { url: prius41Engine, category: "engine" },
-      { url: prius41Engine, category: "engine" },
     ],
     featured: true,
   },
 ];
 
 export const brands = ["Toyota", "Lexus"] as const;
-export const models = ["Prius 30", "Prius 40", "Prius 41", "Harrier", "Sai", "Camry", "Crown", "RX 450h"] as const;
-export const engineTypes = ["Hybrid", "Gasoline"] as const;
+export const models = ["Prius 30", "Prius 40", "Prius 41", "Prius 55", "Harrier", "Sai", "Crown", "RX 200t"] as const;
+export const engineTypes = ["Hybrid", "Gasoline", "Gasoline 2.5 turbo"] as const;
 export const driveTypes = ["AWD", "FWD"] as const;
 
 export function formatPrice(price: number): string {
