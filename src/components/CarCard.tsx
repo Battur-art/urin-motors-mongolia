@@ -128,7 +128,7 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
                   {car.name}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {car.year} • {formatMileage(car.mileage)}
+                  {car.yearEnd && car.yearEnd !== car.year ? `${car.year}–${car.yearEnd}` : car.year} • {formatMileage(car.mileage)}
                 </p>
               </div>
               <span className="font-heading text-lg font-medium">

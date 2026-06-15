@@ -71,7 +71,7 @@ const CarDetailPage = () => {
   };
 
   const specs = [
-    { icon: Calendar, label: "Үйлдвэрлэсэн он", value: `${car.year}` },
+    { icon: Calendar, label: "Үйлдвэрлэсэн он", value: car.yearEnd && car.yearEnd !== car.year ? `${car.year}–${car.yearEnd}` : `${car.year}` },
     { icon: Gauge, label: "Гүйлт", value: formatMileage(car.mileage) },
     { icon: Fuel, label: "Хөдөлгүүр", value: car.engineType === "Hybrid" ? "Хайбрид" : "Бензин" },
     { icon: Cog, label: "Хөтлөгч", value: car.driveType },

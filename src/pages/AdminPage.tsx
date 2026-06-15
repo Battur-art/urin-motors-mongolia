@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 
 const ADMIN_HASH = (import.meta.env.VITE_ADMIN_HASH as string ?? "").toLowerCase();
-const MAX_ATTEMPTS = 5;
+const MAX_ATTEMPTS = 8;
 const LOCKOUT_SECONDS = 30;
 const SESSION_DURATION_MS = 2 * 60 * 60 * 1000;
 
@@ -38,6 +38,7 @@ const emptyForm: Omit<Car, "id"> = {
   brand: "Toyota",
   model: "",
   year: new Date().getFullYear(),
+  yearEnd: new Date().getFullYear(),
   mileage: 0,
   engineType: "Hybrid",
   driveType: "FWD",
@@ -92,7 +93,7 @@ function CarForm({ initial, onSave, onCancel }: CarFormProps) {
     );
   };
 
-  
+
   const removeImage = (idx: number) => {
     setImages((prev) => prev.filter((_, i) => i !== idx));
   };
@@ -154,8 +155,12 @@ function CarForm({ initial, onSave, onCancel }: CarFormProps) {
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Үйлдвэрлэсэн он *</Label>
+          <Label>Үйлдвэрлэсэн он  *</Label>
           <Input type="number" value={form.year} onChange={(e) => set("year", Number(e.target.value))} className="rounded-none" />
+        </div>
+        <div className="space-y-2">
+          <Label>Орж ирсэн он</Label>
+          <Input type="number" value={form.yearEnd ?? ""} onChange={(e) => set("yearEnd", e.target.value === "" ? undefined : Number(e.target.value))} placeholder="Хоосон үед хах" className="rounded-none" />
         </div>
         <div className="space-y-2">
           <Label>Гүйлт (км) *</Label>

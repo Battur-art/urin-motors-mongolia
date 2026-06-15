@@ -27,6 +27,7 @@ export interface Car {
   brand: "Toyota" | "Lexus";
   model: string;
   year: number;
+  yearEnd?: number;
   mileage: number;
   engineType: "Hybrid" | "Gasoline" | "Gasoline 2.5 turbo";
   driveType: "AWD" | "FWD";
