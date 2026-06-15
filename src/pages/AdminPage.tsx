@@ -92,6 +92,7 @@ function CarForm({ initial, onSave, onCancel }: CarFormProps) {
     );
   };
 
+  
   const removeImage = (idx: number) => {
     setImages((prev) => prev.filter((_, i) => i !== idx));
   };
