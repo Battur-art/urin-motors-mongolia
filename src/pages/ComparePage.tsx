@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Scale, X, ArrowRight } from "lucide-react";
-import { cars, formatPrice, formatMileage } from "@/data/cars";
+import { formatPrice, formatMileage } from "@/data/cars";
+import { useCars } from "@/contexts/CarsContext";
 import { useCompare } from "@/contexts/CompareContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -9,6 +10,7 @@ import { CarCard } from "@/components/CarCard";
 import { Button } from "@/components/ui/button";
 
 const ComparePage = () => {
+  const { cars } = useCars();
   const { compareList, removeFromCompare, clearCompare } = useCompare();
 
   const carsToCompare = compareList

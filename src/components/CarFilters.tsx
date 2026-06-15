@@ -40,7 +40,7 @@ interface CarFiltersProps {
 export const defaultFilters: FilterState = {
   brand: "all",
   model: "all",
-  yearMin: 2015,
+  yearMin: 2010,
   yearMax: 2025,
   priceMin: 0,
   priceMax: 150000000,

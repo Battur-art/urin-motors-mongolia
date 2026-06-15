@@ -3,7 +3,7 @@ import { ArrowRight, Shield, Truck, Award, ArrowUpRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import heroImage from "@/assets/hero-car.jpg";
-import { cars } from "@/data/cars";
+import { useCars } from "@/contexts/CarsContext";
 import { CarCard } from "@/components/CarCard";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -16,6 +16,7 @@ import {
 } from "@/components/AnimatedSection";
 
 const Index = () => {
+  const { cars } = useCars();
   const featuredCars = cars.filter((car) => car.featured).slice(0, 3);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({

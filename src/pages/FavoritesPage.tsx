@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Heart, Trash2 } from "lucide-react";
-import { cars } from "@/data/cars";
+import { useCars } from "@/contexts/CarsContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -8,6 +8,7 @@ import { CarCard } from "@/components/CarCard";
 import { Button } from "@/components/ui/button";
 
 const FavoritesPage = () => {
+  const { cars } = useCars();
   const { favorites, removeFavorite } = useFavorites();
 
   const favoriteCars = favorites

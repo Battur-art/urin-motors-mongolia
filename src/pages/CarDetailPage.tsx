@@ -1,7 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Heart, Scale, Calendar, Gauge, Fuel, Cog, Car, Settings, Share2, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { cars, formatPrice, formatMileage } from "@/data/cars";
+import { formatPrice, formatMileage } from "@/data/cars";
+import { useCars } from "@/contexts/CarsContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useCompare } from "@/contexts/CompareContext";
 import { Header } from "@/components/Header";
@@ -15,6 +16,7 @@ import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/Ani
 
 const CarDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const { cars } = useCars();
   const car = cars.find((c) => c.id === id);
   const { isFavorite, toggleFavorite } = useFavorites();
   const { isInCompare, toggleCompare, compareList } = useCompare();
@@ -80,6 +82,7 @@ const CarDetailPage = () => {
   const relatedCars = cars
     .filter((c) => c.brand === car.brand && c.id !== car.id)
     .slice(0, 3);
+
 
   return (
     <div className="min-h-screen bg-background">

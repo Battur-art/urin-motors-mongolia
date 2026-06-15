@@ -4,7 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CarCard } from "@/components/CarCard";
 import { CarFilters, FilterState, defaultFilters } from "@/components/CarFilters";
-import { cars } from "@/data/cars";
+import { useCars } from "@/contexts/CarsContext";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,7 +19,17 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 type SortOption = "price-asc" | "price-desc" | "year-desc" | "mileage-asc";
 
 const CarsPage = () => {
-  const [filters, setFilters] = useState<FilterState>(defaultFilters);
+  const { cars } = useCars();
+
+  const dynamicDefaults = useMemo((): FilterState => ({
+    ...defaultFilters,
+    yearMin: cars.length ? Math.min(...cars.map((c) => c.year)) : defaultFilters.yearMin,
+    yearMax: cars.length ? Math.max(...cars.map((c) => c.year)) : defaultFilters.yearMax,
+    priceMax: cars.length ? Math.max(...cars.map((c) => c.price), defaultFilters.priceMax) : defaultFilters.priceMax,
+    mileageMax: cars.length ? Math.max(...cars.map((c) => c.mileage), defaultFilters.mileageMax) : defaultFilters.mileageMax,
+  }), []);
+
+  const [filters, setFilters] = useState<FilterState>(dynamicDefaults);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("year-desc");
 
@@ -61,10 +71,10 @@ const CarsPage = () => {
     });
 
     return result;
-  }, [filters, searchQuery, sortBy]);
+  }, [filters, searchQuery, sortBy, cars]);
 
   const handleResetFilters = () => {
-    setFilters(defaultFilters);
+    setFilters(dynamicDefaults);
     setSearchQuery("");
   };
 
@@ -88,6 +98,7 @@ const CarsPage = () => {
           <AnimatedSection delay={0.2}>
             <p className="text-muted-foreground text-lg">
               Нийт {cars.length} машин, {filteredCars.length} илэрц олдлоо
+
             </p>
           </AnimatedSection>
         </div>
