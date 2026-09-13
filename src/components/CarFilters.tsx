@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ChevronDown, X, SlidersHorizontal } from "lucide-react";
 import { brands, models, engineTypes, driveTypes } from "@/data/cars";
+import { useCars } from "@/contexts/CarsContext";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -61,6 +62,25 @@ function formatNumber(num: number): string {
 }
 
 function FiltersContent({ filters, onFilterChange, onReset }: CarFiltersProps) {
+  const { cars } = useCars();
+
+  const availableBrands = useMemo(
+    () => Array.from(new Set([...brands, ...cars.map((c) => c.brand).filter(Boolean)])),
+    [cars]
+  );
+  const availableModels = useMemo(
+    () => Array.from(new Set([...models, ...cars.map((c) => c.model).filter(Boolean)])),
+    [cars]
+  );
+  const availableEngineTypes = useMemo(
+    () => Array.from(new Set([...engineTypes, ...cars.map((c) => c.engineType).filter(Boolean)])),
+    [cars]
+  );
+  const availableDriveTypes = useMemo(
+    () => Array.from(new Set([...driveTypes, ...cars.map((c) => c.driveType).filter(Boolean)])),
+    [cars]
+  );
+
   const hasActiveFilters = Object.entries(filters).some(([key, value]) => {
     const defaultValue = defaultFilters[key as keyof FilterState];
     return value !== defaultValue;
@@ -80,7 +100,7 @@ function FiltersContent({ filters, onFilterChange, onReset }: CarFiltersProps) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Бүгд</SelectItem>
-            {brands.map((brand) => (
+            {availableBrands.map((brand) => (
               <SelectItem key={brand} value={brand}>
                 {brand}
               </SelectItem>
@@ -101,7 +121,7 @@ function FiltersContent({ filters, onFilterChange, onReset }: CarFiltersProps) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Бүгд</SelectItem>
-            {models.map((model) => (
+            {availableModels.map((model) => (
               <SelectItem key={model} value={model}>
                 {model}
               </SelectItem>
@@ -179,9 +199,9 @@ function FiltersContent({ filters, onFilterChange, onReset }: CarFiltersProps) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Бүгд</SelectItem>
-            {engineTypes.map((type) => (
+            {availableEngineTypes.map((type) => (
               <SelectItem key={type} value={type}>
-                {type === "Hybrid" ? "Хайбрид" : type === "Gasoline 2.5 turbo" ? "Бензин 2.5 турбо" : "Бензин"}
+                {type === "Hybrid" ? "Хайбрид" : type === "Gasoline 2.5 turbo" ? "Бензин 2.5 турбо" : type === "Gasoline" ? "Бензин" : type}
               </SelectItem>
             ))}
           </SelectContent>
@@ -200,7 +220,7 @@ function FiltersContent({ filters, onFilterChange, onReset }: CarFiltersProps) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Бүгд</SelectItem>
-            {driveTypes.map((type) => (
+            {availableDriveTypes.map((type) => (
               <SelectItem key={type} value={type}>
                 {type}
               </SelectItem>

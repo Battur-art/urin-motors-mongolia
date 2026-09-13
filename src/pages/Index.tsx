@@ -63,6 +63,7 @@ const Index = () => {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/40 to-transparent" />
           </motion.div>
 
           <motion.div
@@ -78,7 +79,7 @@ const Index = () => {
                   className="mb-6"
                 >
                   <span className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-                    Монголын #1 Хайбрид Машины Дэлгүүр
+
                   </span>
                 </motion.div>
 
@@ -88,9 +89,9 @@ const Index = () => {
                   transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                   className="text-display mb-8"
                 >
-                  Чанартай Япон
+                  Urin Motors-д
                   <br />
-                  машинууд
+                  тавтай морил
                 </motion.h1>
 
                 <motion.div
@@ -207,24 +208,35 @@ const Index = () => {
               </AnimatedSection>
 
               <AnimatedSection delay={0.3} className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="https://wa.me/97699889966" target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/97680222270" target="_blank" rel="noopener noreferrer">
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button
                       size="lg"
                       className="bg-background text-foreground hover:bg-background/90 uppercase tracking-wider px-8"
                     >
-                      WhatsApp-р холбогдох
+                      WhatsApp
                     </Button>
                   </motion.div>
                 </a>
-                <a href="tel:+97699889966">
+                <a href="tel:+97680222270">
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button
                       size="lg"
                       variant="outline"
-                     className="border border-white bg-black text-white hover:bg-white hover:text-black hover:border-black uppercase tracking-wider px-8 py-3 transition-all duration-300"
+                      className="border border-white bg-black text-white hover:bg-white hover:text-black hover:border-black uppercase tracking-wider px-6 py-3 transition-all duration-300"
                     >
-                      +976 99 88 99 66
+                      8022 2270
+                    </Button>
+                  </motion.div>
+                </a>
+                <a href="tel:+97699000235">
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="border border-white bg-black text-white hover:bg-white hover:text-black hover:border-black uppercase tracking-wider px-6 py-3 transition-all duration-300"
+                    >
+                      9900 0235
                     </Button>
                   </motion.div>
                 </a>

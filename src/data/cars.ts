@@ -21,22 +21,29 @@ export interface CarImage {
   category: "exterior" | "engine" | "interior";
 }
 
+export interface CarVideo {
+  url: string;
+}
+
 export interface Car {
   id: string;
   name: string;
-  brand: "Toyota" | "Lexus";
+  brand: string;
   model: string;
   year: number;
   yearEnd?: number;
   mileage: number;
-  engineType: "Hybrid" | "Gasoline" | "Gasoline 2.5 turbo";
-  driveType: "AWD" | "FWD";
+  engineType: string;
+  driveType: string;
   transmission: string;
   fuelConsumption: string;
   price: number;
   description: string;
   images: CarImage[];
+  videos?: CarVideo[];
   featured?: boolean;
+  sold?: boolean;
+  multipleUnits?: boolean;
 }
 
 export const cars: Car[] = [

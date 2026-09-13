@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X, Scale } from "lucide-react";
+import { Heart, Menu, X, Scale, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useCompare } from "@/contexts/CompareContext";
@@ -35,7 +35,7 @@ export function Header() {
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? "glass py-3" : "bg-transparent py-6"
+        isScrolled ? "glass py-3" : "bg-gradient-to-b from-black/50 to-transparent py-6"
       }`}
     >
       <div className="container-wide">
@@ -124,13 +124,24 @@ export function Header() {
               </motion.div>
             </Link>
 
-            <a href="tel:+97699889966" className="hidden md:block ml-4">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button className="uppercase tracking-wider text-xs px-6">
-                  Холбоо барих
-                </Button>
-              </motion.div>
-            </a>
+            <div className="hidden md:flex items-center gap-2 ml-4">
+              <a href="tel:+97680222270">
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button className="uppercase tracking-wider text-xs px-4 gap-1.5">
+                    <Phone className="h-3.5 w-3.5" />
+                    8022 2270
+                  </Button>
+                </motion.div>
+              </a>
+              <a href="tel:+97699000235">
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button variant="outline" className="uppercase tracking-wider text-xs px-4 gap-1.5 border-foreground/30 hover:border-foreground">
+                    <Phone className="h-3.5 w-3.5" />
+                    9900 0235
+                  </Button>
+                </motion.div>
+              </a>
+            </div>
 
             {/* Mobile Menu Toggle */}
             <motion.div whileTap={{ scale: 0.9 }} className="lg:hidden ml-2">
@@ -179,11 +190,18 @@ export function Header() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navLinks.length * 0.1 }}
-                className="pt-4 mt-4 border-t border-border"
+                className="pt-4 mt-4 border-t border-border flex flex-col gap-2"
               >
-                <a href="tel:+97699889966">
-                  <Button className="w-full uppercase tracking-wider">
-                    +976 99 88 99 66
+                <a href="tel:+97680222270">
+                  <Button className="w-full uppercase tracking-wider gap-2">
+                    <Phone className="h-4 w-4" />
+                    8022 2270
+                  </Button>
+                </a>
+                <a href="tel:+97699000235">
+                  <Button variant="outline" className="w-full uppercase tracking-wider gap-2">
+                    <Phone className="h-4 w-4" />
+                    9900 0235
                   </Button>
                 </a>
               </motion.div>

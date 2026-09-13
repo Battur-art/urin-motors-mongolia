@@ -1,8 +1,24 @@
-import { Link } from "react-router-dom";
-import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Phone, Mail, MapPin, MessageCircle, Clock } from "lucide-react";
 import Logo from "@/assets/urin.jpg";
+import { useRef } from "react";
 
 export function Footer() {
+  const navigate = useNavigate();
+  const tapCount = useRef(0);
+  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleSecretTap = () => {
+    tapCount.current += 1;
+    if (tapTimer.current) clearTimeout(tapTimer.current);
+    if (tapCount.current >= 5) {
+      tapCount.current = 0;
+      navigate("/admin");
+      return;
+    }
+    tapTimer.current = setTimeout(() => { tapCount.current = 0; }, 2000);
+  };
+
   return (
     <footer className="bg-card border-t border-border">
       <div className="container-custom py-12 md:py-16">
@@ -68,13 +84,19 @@ export function Footer() {
             <h4 className="font-heading font-semibold mb-4">Холбоо барих</h4>
             <ul className="space-y-3">
               <li>
-                <a href="tel:+97699889966" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
+                <a href="tel:+97680222270" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
                   <Phone className="h-4 w-4" />
-                  +976 99 88 99 66
+                  8022 2270
                 </a>
               </li>
               <li>
-                <a href="https://wa.me/97699889966" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
+                <a href="tel:+97699000235" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
+                  <Phone className="h-4 w-4" />
+                  9900 0235
+                </a>
+              </li>
+              <li>
+                <a href="https://wa.me/97680222270" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
                   <MessageCircle className="h-4 w-4" />
                   WhatsApp
                 </a>
@@ -87,14 +109,18 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-2 text-muted-foreground text-sm">
                 <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span>Улаанбаатар хот, Баянзүрх дүүрэг</span>
+                <span>Улаанбаатар хот, Авто 22 худалдаа</span>
+              </li>
+              <li className="flex items-start gap-2 text-muted-foreground text-sm">
+                <Clock className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                <span>Даваа - Бямба: 09:00 - 18:00</span>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-border text-center text-muted-foreground text-sm">
-          <p>© {new Date().getFullYear()} Urin Motors. Бүх эрх хуулиар хамгаалагдсан.</p>
+          <p onClick={handleSecretTap} className="cursor-default select-none">© {new Date().getFullYear()} Urin Motors. Бүх эрх хуулиар хамгаалагдсан.</p>
         </div>
       </div>
     </footer>

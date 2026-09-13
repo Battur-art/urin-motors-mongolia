@@ -65,9 +65,14 @@ const AboutPage = () => {
                     </div>
                     <div>
                       <span className="text-muted-foreground text-sm block">Утас</span>
-                      <a href="tel:+97699889966" className="font-medium hover:text-primary transition-colors">
-                        +976 99 88 99 66
-                      </a>
+                      <div className="flex flex-col gap-1">
+                        <a href="tel:+97680222270" className="font-medium hover:text-primary transition-colors">
+                          8022 2270
+                        </a>
+                        <a href="tel:+97699000235" className="font-medium hover:text-primary transition-colors">
+                          9900 0235
+                        </a>
+                      </div>
                     </div>
                   </li>
                   <li className="flex items-start gap-4">
@@ -87,7 +92,7 @@ const AboutPage = () => {
                     </div>
                     <div>
                       <span className="text-muted-foreground text-sm block">Хаяг</span>
-                      <span className="font-medium">Улаанбаатар хот, Баянзүрх дүүрэг</span>
+                      <span className="font-medium">Улаанбаатар хот, Авто 22 худалдаа</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-4">

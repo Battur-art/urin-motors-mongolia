@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { CompareProvider } from "@/contexts/CompareContext";
 import { CarsProvider } from "@/contexts/CarsContext";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import CarsPage from "./pages/CarsPage";
 import CarDetailPage from "./pages/CarDetailPage";
@@ -19,31 +20,33 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <CarsProvider>
-        <FavoritesProvider>
-          <CompareProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <ScrollToTop />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/cars" element={<CarsPage />} />
-                <Route path="/car/:id" element={<CarDetailPage />} />
-                <Route path="/favorites" element={<FavoritesPage />} />
-                <Route path="/compare" element={<ComparePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/admin" element={<AdminPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </CompareProvider>
-        </FavoritesProvider>
-      </CarsProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <CarsProvider>
+          <FavoritesProvider>
+            <CompareProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <ScrollToTop />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/cars" element={<CarsPage />} />
+                  <Route path="/car/:id" element={<CarDetailPage />} />
+                  <Route path="/favorites" element={<FavoritesPage />} />
+                  <Route path="/compare" element={<ComparePage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/admin" element={<AdminPage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </CompareProvider>
+          </FavoritesProvider>
+        </CarsProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

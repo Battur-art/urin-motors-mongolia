@@ -73,7 +73,7 @@ const CarDetailPage = () => {
   const specs = [
     { icon: Calendar, label: "Үйлдвэрлэсэн он", value: car.yearEnd && car.yearEnd !== car.year ? `${car.year}–${car.yearEnd}` : `${car.year}` },
     { icon: Gauge, label: "Гүйлт", value: formatMileage(car.mileage) },
-    { icon: Fuel, label: "Хөдөлгүүр", value: car.engineType === "Hybrid" ? "Хайбрид" : "Бензин" },
+    { icon: Fuel, label: "Хөдөлгүүр", value: car.engineType === "Hybrid" ? "Хайбрид" : car.engineType === "Gasoline" ? "Бензин" : car.engineType },
     { icon: Cog, label: "Хөтлөгч", value: car.driveType },
     { icon: Settings, label: "Хурдны хайрцаг", value: car.transmission },
     { icon: Car, label: "Түлшний зарцуулалт", value: car.fuelConsumption },
@@ -106,9 +106,44 @@ const CarDetailPage = () => {
 
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-            {/* Image Gallery */}
+            {/* Image Gallery & Videos */}
             <AnimatedSection>
-              <ImageGallery images={car.images} carName={car.name} />
+              {car.images && car.images.length > 0 ? (
+                <div className="space-y-6">
+                  <ImageGallery images={car.images} carName={car.name} />
+                  {car.videos && car.videos.length > 0 && (
+                    <div className="space-y-3 pt-4 border-t border-border">
+                      <h3 className="text-sm uppercase tracking-wider text-muted-foreground">Бичлэг</h3>
+                      <div className="grid grid-cols-1 gap-4">
+                        {car.videos.map((vid, idx) => (
+                          <div key={idx} className="aspect-video bg-black overflow-hidden border border-border">
+                            <video src={vid.url} controls className="w-full h-full object-contain" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : car.videos && car.videos.length > 0 ? (
+                <div className="space-y-4">
+                  <div className="aspect-video bg-black overflow-hidden border border-border">
+                    <video src={car.videos[0].url} controls autoPlay muted playsInline className="w-full h-full object-contain" />
+                  </div>
+                  {car.videos.length > 1 && (
+                    <div className="grid grid-cols-2 gap-3">
+                      {car.videos.slice(1).map((vid, idx) => (
+                        <div key={idx} className="aspect-video bg-black overflow-hidden border border-border">
+                          <video src={vid.url} controls className="w-full h-full object-contain" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="aspect-video bg-muted flex items-center justify-center border border-border text-muted-foreground text-sm">
+                  Зураг эсвэл видео байхгүй байна
+                </div>
+              )}
             </AnimatedSection>
 
             {/* Car Details */}
@@ -118,7 +153,7 @@ const CarDetailPage = () => {
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div>
                     <div className="flex gap-2 mb-4">
-                      {car.engineType === "Hybrid" && (
+                      {car.engineType?.toLowerCase().includes("hybrid") && (
                         <span className="badge-hybrid">Hybrid</span>
                       )}
                       {car.featured && (

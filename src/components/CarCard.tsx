@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Heart, Scale, ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 import { Car, formatPrice, formatMileage } from "@/data/cars";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useCompare } from "@/contexts/CompareContext";
@@ -17,6 +18,38 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
   const { isInCompare, toggleCompare, compareList } = useCompare();
   const favorite = isFavorite(car.id);
   const inCompare = isInCompare(car.id);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Auto-play for multipleUnits cars (no hover needed)
+  useEffect(() => {
+    if (car.multipleUnits && car.images && car.images.length > 1) {
+      const id = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % car.images.length);
+      }, 2000);
+      return () => clearInterval(id);
+    }
+  }, [car.multipleUnits, car.images?.length]);
+
+  const handleMouseEnter = () => {
+    // Skip hover cycling for multipleUnits cars (already auto-playing)
+    if (car.multipleUnits) return;
+    if (car.images && car.images.length > 1) {
+      intervalRef.current = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % car.images.length);
+      }, 800);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    // Skip reset for multipleUnits cars
+    if (car.multipleUnits) return;
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setCurrentImageIndex(0);
+  };
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -36,7 +69,11 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
     toast.success(inCompare ? "Харьцуулах жагсаалтаас хасагдлаа" : "Харьцуулах жагсаалтад нэмэгдлээ");
   };
 
-  const mainImage = car.images.find((img) => img.category === "exterior")?.url || car.images[0]?.url;
+  const hasImages = car.images && car.images.length > 0;
+  const hasVideos = car.videos && car.videos.length > 0;
+  const mainImage = hasImages
+    ? car.images[currentImageIndex]?.url || car.images.find((img) => img.category === "exterior")?.url || car.images[0]?.url
+    : undefined;
 
   return (
     <motion.div
@@ -50,16 +87,41 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
       }}
     >
       <Link to={`/car/${car.id}`} className="group block">
-        <article className="relative">
+        <article
+          className="relative"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           {/* Image Container */}
           <div className="relative aspect-[4/3] overflow-hidden bg-muted mb-4">
-            <motion.img
-              src={mainImage}
-              alt={car.name}
-              className="w-full h-full object-cover"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            />
+            {hasImages ? (
+              <AnimatePresence mode="sync">
+                <motion.img
+                  src={mainImage}
+                  alt={car.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  whileHover={{ scale: 1.05 }}
+                  key={currentImageIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                />
+              </AnimatePresence>
+            ) : hasVideos ? (
+              <video
+                src={car.videos![0].url}
+                muted
+                loop
+                autoPlay
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                <span className="text-muted-foreground text-xs uppercase tracking-wider">Мэдээлэлгүй</span>
+              </div>
+            )}
 
             {/* Overlay on hover */}
             <motion.div
@@ -68,9 +130,18 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
               className="absolute inset-0 bg-foreground/10 transition-opacity"
             />
 
+            {/* Sold overlay */}
+            {car.sold && (
+              <div className="absolute inset-0 bg-background/50 backdrop-blur-[1px] flex items-center justify-center z-10">
+                <span className="bg-foreground text-background px-4 py-2 text-sm font-medium uppercase tracking-widest">
+                  Зарагдсан
+                </span>
+              </div>
+            )}
+
             {/* Badges */}
-            <div className="absolute top-4 left-4 flex gap-2">
-              {car.engineType === "Hybrid" && (
+            <div className="absolute top-4 left-4 flex gap-2 z-20">
+              {car.engineType?.toLowerCase().includes("hybrid") && (
                 <span className="badge-hybrid">Hybrid</span>
               )}
               {car.featured && (
@@ -124,7 +195,7 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="font-heading text-lg font-medium group-hover:opacity-60 transition-opacity">
+                <h3 className="font-heading text-lg font-medium transition-opacity">
                   {car.name}
                 </h3>
                 <p className="text-sm text-muted-foreground">

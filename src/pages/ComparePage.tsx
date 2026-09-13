@@ -84,12 +84,21 @@ const ComparePage = () => {
                             <X className="h-4 w-4" />
                           </button>
                           <Link to={`/car/${car!.id}`} className="block group">
-                            <div className="aspect-[4/3] rounded-lg overflow-hidden mb-3 mx-auto max-w-[200px]">
-                              <img
-                                src={car!.images.find((img) => img.category === "exterior")?.url || car!.images[0]?.url}
-                                alt={car!.name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                              />
+                            <div className="aspect-[4/3] rounded-lg overflow-hidden mb-3 mx-auto max-w-[200px] bg-muted">
+                              {car!.images && car!.images.length > 0 ? (
+                                <img
+                                  src={car!.images.find((img) => img.category === "exterior")?.url || car!.images[0]?.url}
+                                  alt={car!.name}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                />
+                              ) : car!.videos && car!.videos.length > 0 ? (
+                                <video
+                                  src={car!.videos[0].url}
+                                  className="w-full h-full object-cover"
+                                  muted
+                                  playsInline
+                                />
+                              ) : null}
                             </div>
                             <span className="font-heading font-semibold group-hover:text-primary transition-colors">
                               {car!.name}

@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Plus, Pencil, Trash2, LogOut, X, Upload, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, LogOut, X, Upload, Image as ImageIcon, Eye, EyeOff, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCars } from "@/contexts/CarsContext";
-import { Car, CarImage } from "@/data/cars";
+import { Car, CarImage, CarVideo } from "@/data/cars";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,19 +35,21 @@ function generateId(name: string): string {
 
 const emptyForm: Omit<Car, "id"> = {
   name: "",
-  brand: "Toyota",
+  brand: "",
   model: "",
   year: new Date().getFullYear(),
   yearEnd: new Date().getFullYear(),
   mileage: 0,
-  engineType: "Hybrid",
-  driveType: "FWD",
+  engineType: "",
+  driveType: "",
   transmission: "",
   fuelConsumption: "",
   price: 0,
   description: "",
   images: [],
+  videos: [],
   featured: false,
+  multipleUnits: false,
 };
 
 type FormData = Omit<Car, "id">;
@@ -61,29 +63,87 @@ interface CarFormProps {
 function CarForm({ initial, onSave, onCancel }: CarFormProps) {
   const [form, setForm] = useState<FormData>(initial ? { ...initial } : { ...emptyForm });
   const [images, setImages] = useState<CarImage[]>(initial?.images ?? []);
+  const [videos, setVideos] = useState<CarVideo[]>(initial?.videos ?? []);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof FormData>(key: K, value: FormData[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
+
+  const compressImage = (file: File): Promise<CarImage> =>
+    new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX = 800;
+          let { width, height } = img;
+          if (width > MAX || height > MAX) {
+            if (width > height) {
+              height = Math.round((height * MAX) / width);
+              width = MAX;
+            } else {
+              width = Math.round((width * MAX) / height);
+              height = MAX;
+            }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+          resolve({ url: canvas.toDataURL("image/jpeg", 0.7), category: "exterior" });
+        };
+        img.src = e.target!.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     if (!files.length) return;
     setUploading(true);
-    const readers = files.map(
-      (file) =>
-        new Promise<CarImage>((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () =>
-            resolve({ url: reader.result as string, category: "exterior" });
-          reader.readAsDataURL(file);
-        })
-    );
-    Promise.all(readers).then((newImgs) => {
+    Promise.all(files.map(compressImage)).then((newImgs) => {
       setImages((prev) => [...prev, ...newImgs]);
       setUploading(false);
     });
+    e.target.value = "";
+  };
+
+  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length) return;
+
+    const MAX_SIZE = 100 * 1024 * 1024;
+    const oversized = files.find((f) => f.size > MAX_SIZE);
+    if (oversized) {
+      toast.error(`Видео хэт том байна (${(oversized.size / (1024 * 1024)).toFixed(1)}MB). 100MB-аас бага бичлэг оруулна уу.`);
+      e.target.value = "";
+      return;
+    }
+
+    setUploading(true);
+    const readers = files.map(
+      (file) =>
+        new Promise<CarVideo>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () =>
+            resolve({ url: reader.result as string });
+          reader.onerror = () => reject(reader.error);
+          reader.readAsDataURL(file);
+        })
+    );
+    Promise.all(readers)
+      .then((newVideos) => {
+        setVideos((prev) => [...prev, ...newVideos]);
+      })
+      .catch((err) => {
+        console.error("Video load error:", err);
+        toast.error("Бичлэг уншихад алдаа гарлаа");
+      })
+      .finally(() => {
+        setUploading(false);
+      });
     e.target.value = "";
   };
 
@@ -98,16 +158,28 @@ function CarForm({ initial, onSave, onCancel }: CarFormProps) {
     setImages((prev) => prev.filter((_, i) => i !== idx));
   };
 
+  const removeVideo = (idx: number) => {
+    setVideos((prev) => prev.filter((_, i) => i !== idx));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (uploading) {
+      toast.error("Файл уншиж байна, түр хүлээнэ үү");
+      return;
+    }
     if (!form.name.trim()) { toast.error("Нэр оруулна уу"); return; }
     if (!form.model.trim()) { toast.error("Загвар оруулна уу"); return; }
     if (form.price <= 0) { toast.error("Үнэ оруулна уу"); return; }
-    if (images.length === 0) { toast.error("Дор хаяж 1 зураг оруулна уу"); return; }
+    if (images.length === 0 && videos.length === 0) {
+      toast.error("Дор хаяж 1 зураг эсвэл видео оруулна уу");
+      return;
+    }
     const car: Car = {
       ...form,
       id: initial?.id ?? generateId(form.name),
       images,
+      videos,
     };
     onSave(car);
   };
@@ -125,34 +197,30 @@ function CarForm({ initial, onSave, onCancel }: CarFormProps) {
         </div>
         <div className="space-y-2">
           <Label>Брэнд</Label>
-          <Select value={form.brand} onValueChange={(v) => set("brand", v as Car["brand"])}>
-            <SelectTrigger className="rounded-none"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Toyota">Toyota</SelectItem>
-              <SelectItem value="Lexus">Lexus</SelectItem>
-            </SelectContent>
-          </Select>
+          <Input
+            value={form.brand}
+            onChange={(e) => set("brand", e.target.value)}
+            placeholder="Toyota, Lexus гэх мэт"
+            className="rounded-none"
+          />
         </div>
         <div className="space-y-2">
           <Label>Хөдөлгүүрийн төрөл</Label>
-          <Select value={form.engineType} onValueChange={(v) => set("engineType", v as Car["engineType"])}>
-            <SelectTrigger className="rounded-none"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Hybrid">Hybrid</SelectItem>
-              <SelectItem value="Gasoline">Gasoline</SelectItem>
-              <SelectItem value="Gasoline 2.5 turbo">Gasoline 2.5 turbo</SelectItem>
-            </SelectContent>
-          </Select>
+          <Input
+            value={form.engineType}
+            onChange={(e) => set("engineType", e.target.value)}
+            placeholder="Hybrid, Gasoline гэх мэт"
+            className="rounded-none"
+          />
         </div>
         <div className="space-y-2">
           <Label>Хөтлөгч</Label>
-          <Select value={form.driveType} onValueChange={(v) => set("driveType", v as Car["driveType"])}>
-            <SelectTrigger className="rounded-none"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="FWD">FWD</SelectItem>
-              <SelectItem value="AWD">AWD</SelectItem>
-            </SelectContent>
-          </Select>
+          <Input
+            value={form.driveType}
+            onChange={(e) => set("driveType", e.target.value)}
+            placeholder="FWD, AWD гэх мэт"
+            className="rounded-none"
+          />
         </div>
         <div className="space-y-2">
           <Label>Үйлдвэрлэсэн он  *</Label>
@@ -222,12 +290,32 @@ function CarForm({ initial, onSave, onCancel }: CarFormProps) {
           />
           <Label htmlFor="featured">Онцлох машин болгох</Label>
         </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="sold"
+            checked={!!form.sold}
+            onChange={(e) => set("sold", e.target.checked)}
+            className="h-4 w-4"
+          />
+          <Label htmlFor="sold">Зарагдсан</Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="multipleUnits"
+            checked={!!form.multipleUnits}
+            onChange={(e) => set("multipleUnits", e.target.checked)}
+            className="h-4 w-4"
+          />
+          <Label htmlFor="multipleUnits">Олон машин байгаа (зураг автоматаар солигдоно)</Label>
+        </div>
       </div>
 
       {/* Image upload */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label>Зургууд *</Label>
+          <Label>Зургууд</Label>
           <Button
             type="button"
             variant="outline"
@@ -297,11 +385,81 @@ function CarForm({ initial, onSave, onCancel }: CarFormProps) {
         )}
       </div>
 
+      {/* Video upload */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Label>Видео</Label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="rounded-none gap-2"
+            onClick={() => videoInputRef.current?.click()}
+            disabled={uploading}
+          >
+            <Upload className="h-4 w-4" />
+            {uploading ? "Уншиж байна..." : "Видео нэмэх"}
+          </Button>
+          <input
+            ref={videoInputRef}
+            type="file"
+            accept="video/*"
+            multiple
+            className="hidden"
+            onChange={handleVideoUpload}
+          />
+        </div>
+
+        {videos.length === 0 ? (
+          <div
+            className="border-2 border-dashed border-border p-12 text-center cursor-pointer hover:border-foreground/40 transition-colors"
+            onClick={() => videoInputRef.current?.click()}
+          >
+            <ImageIcon className="h-10 w-10 mx-auto mb-3 opacity-30" />
+            <p className="text-sm text-muted-foreground">Видео сонгохын тулд дарна уу</p>
+            <p className="text-xs text-muted-foreground mt-1">MP4, WebM дэмжигдэнэ</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {videos.map((video, idx) => (
+              <div key={idx} className="relative group">
+                <div className="aspect-video overflow-hidden border border-border bg-black">
+                  <video src={video.url} controls className="w-full h-full object-contain" />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeVideo(idx)}
+                  className="absolute top-1 right-1 bg-black/70 text-white p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            ))}
+            <div
+              className="aspect-video border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-foreground/40 transition-colors"
+              onClick={() => videoInputRef.current?.click()}
+            >
+              <Plus className="h-6 w-6 opacity-30" />
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="flex gap-3 pt-2">
-        <Button type="submit" className="rounded-none uppercase tracking-wider flex-1">
-          {initial ? "Хадгалах" : "Нэмэх"}
+        <Button
+          type="submit"
+          disabled={uploading}
+          className="rounded-none uppercase tracking-wider flex-1"
+        >
+          {uploading ? "Уншиж байна..." : initial ? "Хадгалах" : "Нэмэх"}
         </Button>
-        <Button type="button" variant="outline" className="rounded-none uppercase tracking-wider" onClick={onCancel}>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={uploading}
+          className="rounded-none uppercase tracking-wider"
+          onClick={onCancel}
+        >
           Болих
         </Button>
       </div>
@@ -325,6 +483,8 @@ const AdminPage = () => {
   const [mode, setMode] = useState<"list" | "add" | "edit">("list");
   const [editingCar, setEditingCar] = useState<Car | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentImageIndexes, setCurrentImageIndexes] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (lockedUntil <= Date.now()) return;
@@ -352,6 +512,19 @@ const AdminPage = () => {
     }, remaining);
     return () => clearTimeout(timer);
   }, [authed]);
+
+  const handleNextImage = (carId: string) => {
+    const car = cars.find((c) => c.id === carId);
+    if (car && car.images.length > 1) {
+      setCurrentImageIndexes((prev) => {
+        const currentIndex = prev[carId] || 0;
+        return {
+          ...prev,
+          [carId]: (currentIndex + 1) % car.images.length,
+        };
+      });
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -405,6 +578,17 @@ const AdminPage = () => {
     toast.success(`${car?.name ?? "Машин"} устгагдлаа`);
     setDeleteConfirm(null);
   };
+
+  const filteredCars = cars.filter((car) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      car.name.toLowerCase().includes(query) ||
+      car.model.toLowerCase().includes(query) ||
+      car.brand.toLowerCase().includes(query) ||
+      car.year.toString().includes(query) ||
+      new Intl.NumberFormat("mn-MN").format(car.price).includes(query)
+    );
+  });
 
   if (!authed) {
     return (
@@ -507,16 +691,55 @@ const AdminPage = () => {
                 </Button>
               </div>
 
+              {/* Search */}
+              <div className="mb-6">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Хайх - нэр, загвар, брэнд, үнэ..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="rounded-none pl-10"
+                  />
+                </div>
+              </div>
+
               {/* Car List */}
               <div className="border border-border divide-y divide-border">
-                {cars.length === 0 ? (
-                  <div className="py-16 text-center text-muted-foreground">Машин байхгүй байна</div>
+                {filteredCars.length === 0 ? (
+                  <div className="py-16 text-center text-muted-foreground">
+                    {searchQuery ? "Хайлт олдоогүй байна" : "Машин байхгүй байна"}
+                  </div>
                 ) : (
-                  cars.map((car) => (
-                    <div key={car.id} className="flex items-center gap-4 p-4 hover:bg-muted/30 transition-colors">
+                  filteredCars.map((car) => (
+                    <div
+                      key={car.id}
+                      className="flex items-center gap-4 p-4 hover:bg-muted/30 transition-colors"
+                      onMouseEnter={() => handleNextImage(car.id)}
+                      onMouseLeave={() => setCurrentImageIndexes((prev) => ({ ...prev, [car.id]: 0 }))}
+                    >
                       <div className="w-20 h-14 flex-shrink-0 overflow-hidden bg-muted">
-                        {car.images[0] ? (
-                          <img src={car.images[0].url} alt={car.name} className="w-full h-full object-cover" />
+                        {car.images.length > 0 ? (
+                          <AnimatePresence mode="wait">
+                            <motion.img
+                              src={car.images[currentImageIndexes[car.id] || 0]?.url}
+                              alt={car.name}
+                              className="w-full h-full object-cover"
+                              key={currentImageIndexes[car.id] || 0}
+                              initial={{ opacity: 0, scale: 1.05 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.95 }}
+                              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            />
+                          </AnimatePresence>
+                        ) : car.videos && car.videos.length > 0 ? (
+                          <video
+                            src={car.videos[0].url}
+                            className="w-full h-full object-cover"
+                            muted
+                            playsInline
+                          />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
                             <ImageIcon className="h-5 w-5 opacity-30" />
@@ -526,6 +749,9 @@ const AdminPage = () => {
                       <div className="flex-1 min-w-0">
                         <p className="font-medium truncate">{car.name}</p>
                         <p className="text-sm text-muted-foreground">{car.year} · {car.brand} · {new Intl.NumberFormat("mn-MN").format(car.price)}₮</p>
+                        {car.videos && car.videos.length > 0 && (
+                          <p className="text-xs text-muted-foreground">{car.videos.length} видео</p>
+                        )}
                       </div>
                       <div className="flex items-center gap-2">
                         {car.featured && (

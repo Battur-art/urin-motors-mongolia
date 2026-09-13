@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { cars as staticCars, Car } from "@/data/cars";
+import { idbGet, idbSet } from "@/utils/indexedDb";
 
 interface CarsContextType {
   cars: Car[];
@@ -40,16 +41,58 @@ export function CarsProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
+  // Load from IndexedDB on mount (supports large datasets including base64 videos)
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(extraCars));
+    let active = true;
+    (async () => {
+      try {
+        const idbCars = await idbGet<Car[]>(STORAGE_KEY);
+        if (active && idbCars && Array.isArray(idbCars) && idbCars.length > 0) {
+          setExtraCars(idbCars);
+        }
+        const idbOverrides = await idbGet<Record<string, Car>>(STORAGE_KEY + "-overrides");
+        if (active && idbOverrides && typeof idbOverrides === "object") {
+          setOverrides(idbOverrides);
+        }
+        const idbDeleted = await idbGet<string[]>(STORAGE_KEY + "-deleted");
+        if (active && idbDeleted && Array.isArray(idbDeleted)) {
+          setDeletedIds(idbDeleted);
+        }
+      } catch (err) {
+        console.warn("Error loading from IndexedDB:", err);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    idbSet(STORAGE_KEY, extraCars);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(extraCars));
+    } catch (e) {
+      // localStorage quota exceeded is expected for videos; IndexedDB handles it safely
+      console.warn("localStorage quota exceeded for cars, saved in IndexedDB safely.");
+    }
   }, [extraCars]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY + "-overrides", JSON.stringify(overrides));
+    idbSet(STORAGE_KEY + "-overrides", overrides);
+    try {
+      localStorage.setItem(STORAGE_KEY + "-overrides", JSON.stringify(overrides));
+    } catch (e) {
+      console.warn("localStorage quota exceeded for overrides, saved in IndexedDB safely.");
+    }
   }, [overrides]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY + "-deleted", JSON.stringify(deletedIds));
+    idbSet(STORAGE_KEY + "-deleted", deletedIds);
+    try {
+      localStorage.setItem(STORAGE_KEY + "-deleted", JSON.stringify(deletedIds));
+    } catch (e) {
+      console.warn("localStorage quota exceeded for deletedIds, saved in IndexedDB safely.");
+    }
   }, [deletedIds]);
 
   const cars: Car[] = [

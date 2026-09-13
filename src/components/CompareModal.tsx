@@ -52,12 +52,21 @@ export function CompareModal({ open, onOpenChange }: CompareModalProps) {
                   <X className="h-4 w-4" />
                 </button>
                 <Link to={`/car/${car!.id}`} onClick={() => onOpenChange(false)}>
-                  <div className="aspect-[4/3] rounded-lg overflow-hidden mb-3">
-                    <img
-                      src={car!.images.find((img) => img.category === "exterior")?.url || car!.images[0]?.url}
-                      alt={car!.name}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform"
-                    />
+                  <div className="aspect-[4/3] rounded-lg overflow-hidden mb-3 bg-muted">
+                    {car!.images && car!.images.length > 0 ? (
+                      <img
+                        src={car!.images.find((img) => img.category === "exterior")?.url || car!.images[0]?.url}
+                        alt={car!.name}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform"
+                      />
+                    ) : car!.videos && car!.videos.length > 0 ? (
+                      <video
+                        src={car!.videos[0].url}
+                        className="w-full h-full object-cover"
+                        muted
+                        playsInline
+                      />
+                    ) : null}
                   </div>
                   <h4 className="font-heading font-semibold hover:text-primary transition-colors">
                     {car!.name}
