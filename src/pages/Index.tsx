@@ -14,6 +14,7 @@ import {
   StaggerContainer,
   StaggerItem,
 } from "@/components/AnimatedSection";
+import { SEO } from "@/components/SEO";
 
 const Index = () => {
   const { cars } = useCars();
@@ -48,6 +49,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO url="/" />
       <Header />
 
       <main>

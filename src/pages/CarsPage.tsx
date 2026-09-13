@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { SEO } from "@/components/SEO";
 
 type SortOption = "price-asc" | "price-desc" | "year-desc" | "mileage-asc";
 
