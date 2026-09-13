@@ -5,7 +5,8 @@ import { Footer } from "@/components/Footer";
 import { CarCard } from "@/components/CarCard";
 import { CarFilters, FilterState, defaultFilters } from "@/components/CarFilters";
 import { useCars } from "@/contexts/CarsContext";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, FileText, ArrowUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -84,23 +85,45 @@ const CarsPage = () => {
 
       <main className="pt-32 pb-24">
         {/* Page Header */}
-        <div className="container-wide mb-16">
-          <AnimatedSection>
-            <span className="text-sm uppercase tracking-[0.2em] text-muted-foreground block mb-4">
-              Бүх машинууд
-            </span>
-          </AnimatedSection>
-          <AnimatedSection delay={0.1}>
-            <h1 className="text-headline mb-4">
-              Машинууд
-            </h1>
-          </AnimatedSection>
-          <AnimatedSection delay={0.2}>
-            <p className="text-muted-foreground text-lg">
-              Нийт {cars.length} машин, {filteredCars.length} илэрц олдлоо
+        <div className="container-wide mb-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+            <div>
+              <AnimatedSection>
+                <span className="text-sm uppercase tracking-[0.2em] text-muted-foreground block mb-4">
+                  Бүх машинууд
+                </span>
+              </AnimatedSection>
+              <AnimatedSection delay={0.1}>
+                <h1 className="text-headline mb-4">
+                  Машинууд
+                </h1>
+              </AnimatedSection>
+              <AnimatedSection delay={0.2}>
+                <p className="text-muted-foreground text-lg">
+                  Нийт {cars.length} машин, {filteredCars.length} илэрц олдлоо
+                </p>
+              </AnimatedSection>
+            </div>
 
-            </p>
-          </AnimatedSection>
+            <AnimatedSection delay={0.25} className="self-start sm:self-end">
+              <a
+                href="https://forms.gle/qHmXgPbWW437pBjD6"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button
+                    size="lg"
+                    className="rounded-none uppercase tracking-wider text-xs px-6 py-6 h-auto gap-2 bg-foreground text-background hover:bg-foreground/90 font-medium shadow-sm transition-all"
+                  >
+                    <FileText className="h-4 w-4" />
+                    Зээлийн судалгаа бөглөх
+                    <ArrowUpRight className="h-4 w-4" />
+                  </Button>
+                </motion.div>
+              </a>
+            </AnimatedSection>
+          </div>
         </div>
 
         {/* Search and Sort Bar */}
