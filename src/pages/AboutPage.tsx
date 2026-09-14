@@ -44,7 +44,7 @@ const AboutPage = () => {
                 </h2>
                 <p className="text-muted-foreground mb-8 leading-relaxed">
                   Бид үйлчлүүлэгчдийнхээ итгэлийг хүлээсэн, шударга үнээр чанартай машин
-                  нийлүүлдэг. 10 жилийн туршлагатай багийн гишүүд таныг зөвлөж, хамгийн
+                  нийлүүлдэг. Туршлагатай багийн гишүүд таныг зөвлөж, хамгийн
                   тохиромжтой машиныг олоход туслана.
                 </p>
                 <ul className="space-y-3">
@@ -114,11 +114,7 @@ const AboutPage = () => {
         {/* Stats */}
         <section className="py-16 md:py-24 bg-card border-y border-border">
           <div className="container-custom">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              <div>
-                <span className="font-heading text-4xl md:text-5xl font-bold text-primary block">10+</span>
-                <span className="text-muted-foreground">Жилийн туршлага</span>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div>
                 <span className="font-heading text-4xl md:text-5xl font-bold text-primary block">5000+</span>
                 <span className="text-muted-foreground">Нийлүүлсэн машин</span>
